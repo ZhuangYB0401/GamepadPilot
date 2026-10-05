@@ -1,4 +1,4 @@
-# GamepadPilot（手柄领航）
+# GamepadPilot
 
 GamepadPilot 是一个面向 Windows 10/11 的 Xbox/XInput 手柄桌面控制工具。它可以把手柄按键和摇杆映射为键盘、鼠标、媒体键、浏览器键和宏，并通过图形界面自定义。程序关闭主窗口后继续驻留托盘。
 
