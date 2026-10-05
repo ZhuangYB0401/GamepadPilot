@@ -1,0 +1,9 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Version>1.7.3</Version>
+    <Authors>GamepadPilot</Authors>
+    <Product>GamepadPilot</Product>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+</Project>

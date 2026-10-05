@@ -1,0 +1,263 @@
+<Window x:Class="GamepadPilot.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="GamepadPilot（手柄领航）" Width="1160" Height="760" MinWidth="980" MinHeight="640"
+        WindowStartupLocation="CenterScreen" Closing="Window_Closing">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="230" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="{StaticResource SidebarBrush}">
+            <Grid>
+                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                <StackPanel Margin="22,24,18,20">
+                    <TextBlock Text="GAMEPAD" Foreground="#73A7FF" FontSize="12" FontWeight="Bold" />
+                    <TextBlock Text="手柄领航" Foreground="White" FontSize="25" FontWeight="SemiBold" Margin="0,2,0,0" />
+                    <TextBlock Text="GamepadPilot" Foreground="#9DAAB8" FontSize="11" />
+                </StackPanel>
+                <StackPanel Grid.Row="1">
+                    <Button x:Name="NavOverview" Style="{StaticResource NavButton}" Content="总览" Click="Nav_Click" Tag="overview" />
+                    <Button x:Name="NavMapping" Style="{StaticResource NavButton}" Content="按键映射" Click="Nav_Click" Tag="mapping" />
+                    <Button x:Name="NavMacros" Style="{StaticResource NavButton}" Content="宏" Click="Nav_Click" Tag="macros" />
+                    <Button x:Name="NavProfiles" Style="{StaticResource NavButton}" Content="配置与自动规则" Click="Nav_Click" Tag="profiles" />
+                    <Button x:Name="NavSettings" Style="{StaticResource NavButton}" Content="设置" Click="Nav_Click" Tag="settings" />
+                    <Button x:Name="NavHelp" Style="{StaticResource NavButton}" Content="使用说明" Click="Nav_Click" Tag="help" />
+                </StackPanel>
+                <StackPanel Grid.Row="2" Margin="22,0,18,20">
+                    <TextBlock Text="Ctrl+Alt+F12 启停" Foreground="#8292A2" FontSize="11" />
+                    <TextBlock Text="Ctrl+Alt+End 紧急停止" Foreground="#8292A2" FontSize="11" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Column="1" Margin="26,20,26,18">
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+            <Grid Margin="0,0,0,18">
+                <StackPanel><TextBlock x:Name="PageTitle" Text="总览" FontSize="27" FontWeight="SemiBold" /></StackPanel>
+                <Border HorizontalAlignment="Right" Background="#E8F1FD" CornerRadius="18" Padding="14,7">
+                    <TextBlock x:Name="StatusBadge" Foreground="#1D65C1" FontWeight="SemiBold" Text="正在启动…" />
+                </Border>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <ScrollViewer x:Name="OverviewPanel" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <Border Style="{StaticResource CardStyle}">
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock x:Name="ControllerTextBlock" Text="未连接手柄" FontSize="22" FontWeight="SemiBold" />
+                                    <TextBlock x:Name="StatusTextBlock" Text="等待状态" Foreground="{StaticResource MutedBrush}" Margin="0,8,0,0" />
+                                    <TextBlock x:Name="AdminTextBlock" Foreground="{StaticResource MutedBrush}" Margin="0,4,0,0" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Button x:Name="PauseButton" Style="{StaticResource SecondaryButton}" Content="立即暂停" Click="Pause_Click" />
+                                    <Button x:Name="EngineToggleButton" Content="暂停映射" Click="ToggleEnabled_Click" Margin="0" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="1.15*"/><ColumnDefinition Width="0.85*"/></Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,14,14">
+                                <StackPanel>
+                                    <TextBlock Text="实时输入" Style="{StaticResource SectionTitleStyle}" />
+                                    <UniformGrid Columns="2">
+                                        <StackPanel Margin="0,0,12,12"><TextBlock Text="左摇杆 X" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="LeftXText" Text="0.00" FontSize="18"/></StackPanel>
+                                        <StackPanel Margin="0,0,12,12"><TextBlock Text="左摇杆 Y" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="LeftYText" Text="0.00" FontSize="18"/></StackPanel>
+                                        <StackPanel Margin="0,0,12,12"><TextBlock Text="右摇杆 X" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="RightXText" Text="0.00" FontSize="18"/></StackPanel>
+                                        <StackPanel Margin="0,0,12,12"><TextBlock Text="右摇杆 Y" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="RightYText" Text="0.00" FontSize="18"/></StackPanel>
+                                        <StackPanel Margin="0,0,12,12"><TextBlock Text="LT" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="LeftTriggerText" Text="0%" FontSize="18"/></StackPanel>
+                                        <StackPanel Margin="0,0,12,12"><TextBlock Text="RT" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="RightTriggerText" Text="0%" FontSize="18"/></StackPanel>
+                                        <StackPanel Margin="0,0,12,12"><TextBlock Text="背键 1 / 2" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="BackPaddle12Text" Text="— / —" FontSize="18"/></StackPanel>
+                                        <StackPanel Margin="0,0,12,12"><TextBlock Text="背键 3 / 4" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="BackPaddle34Text" Text="— / —" FontSize="18"/></StackPanel>
+                                    </UniformGrid>
+                                </StackPanel>
+                            </Border>
+                            <Border Grid.Column="1" Style="{StaticResource CardStyle}">
+                                <StackPanel>
+                                    <TextBlock Text="状态说明" Style="{StaticResource SectionTitleStyle}" />
+                                    <TextBlock Text="全屏程序会自动暂停映射并释放所有模拟按键。" TextWrapping="Wrap" Margin="0,0,0,10" />
+                                    <TextBlock Text="普通权限无法控制管理员程序；必要时请从右键菜单以管理员身份运行。" TextWrapping="Wrap" Margin="0,0,0,10" />
+                                    <Button Content="打开配置目录" Style="{StaticResource SecondaryButton}" Click="OpenConfigFolder_Click" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <ScrollViewer x:Name="MappingPanel" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock Text="按键与摇杆" Style="{StaticResource SectionTitleStyle}" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" Margin="0,0,12,0"><TextBlock Text="当前配置" Style="{StaticResource FieldLabelStyle}"/><ComboBox x:Name="MappingProfileCombo" DisplayMemberPath="Name" SelectionChanged="MappingProfileCombo_SelectionChanged"/></StackPanel>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Orientation="Horizontal" Margin="0,0,0,8"><Button Content="新增映射" Click="AddBinding_Click"/><Button Content="删除" Style="{StaticResource SecondaryButton}" Click="DeleteBinding_Click"/></StackPanel>
+                                </Grid>
+                                <DataGrid x:Name="BindingsGrid" Height="230" SelectionChanged="BindingsGrid_SelectionChanged">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="手柄输入" Binding="{Binding Source}" Width="120"/>
+                                        <DataGridTextColumn Header="触发" Binding="{Binding Trigger}" Width="90"/>
+                                        <DataGridTextColumn Header="动作" Binding="{Binding Action}" Width="*"/>
+                                        <DataGridCheckBoxColumn Header="启用" Binding="{Binding Enabled}" Width="60"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource CardStyle}">
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="1.25*"/><ColumnDefinition Width="0.75*"/></Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                                    <TextBlock x:Name="BindingEditorTitle" Text="编辑映射" Style="{StaticResource SectionTitleStyle}" />
+                                    <TextBlock Text="背键 1–4 为预留输入；标准 XInput 不单独暴露厂商背键，是否可用取决于手柄驱动或厂商工具。背键 1/2 可读取部分驱动的扩展位，3/4 当前预留。" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" FontSize="11" Margin="0,0,0,8" />
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Margin="0,0,8,0"><TextBlock Text="手柄输入" Style="{StaticResource FieldLabelStyle}"/><ComboBox x:Name="SourceCombo" DisplayMemberPath="Label"/></StackPanel>
+                                        <StackPanel Grid.Column="1"><TextBlock Text="触发方式" Style="{StaticResource FieldLabelStyle}"/><ComboBox x:Name="TriggerCombo" DisplayMemberPath="Label"/></StackPanel>
+                                    </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Margin="0,0,8,0"><TextBlock Text="动作类型" Style="{StaticResource FieldLabelStyle}"/><ComboBox x:Name="ActionTypeCombo" DisplayMemberPath="Label" SelectionChanged="ActionTypeCombo_SelectionChanged"/></StackPanel>
+                                        <StackPanel Grid.Column="1"><TextBlock Text="键盘组合（点击后按键盘）" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="KeyCaptureBox" IsReadOnly="True" PreviewKeyDown="KeyCaptureBox_PreviewKeyDown" GotFocus="Capture_GotFocus" LostFocus="Capture_LostFocus"/></StackPanel>
+                                    </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Margin="0,0,8,0"><TextBlock Text="鼠标按钮" Style="{StaticResource FieldLabelStyle}"/><ComboBox x:Name="MouseButtonCombo" DisplayMemberPath="Label"/></StackPanel>
+                                        <StackPanel Grid.Column="1" Margin="0,0,8,0"><TextBlock Text="滚轮方向" Style="{StaticResource FieldLabelStyle}"/><ComboBox x:Name="WheelCombo" DisplayMemberPath="Label"/></StackPanel>
+                                        <StackPanel Grid.Column="2" Margin="0,0,8,0"><TextBlock Text="音量方向" Style="{StaticResource FieldLabelStyle}"/><ComboBox x:Name="VolumeCombo" DisplayMemberPath="Label"/></StackPanel>
+                                        <StackPanel Grid.Column="3"><TextBlock Text="目标宏" Style="{StaticResource FieldLabelStyle}"/><ComboBox x:Name="MacroCombo" DisplayMemberPath="Name"/></StackPanel>
+                                    </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Margin="0,0,8,0"><TextBlock Text="缩放 / 速度" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="ScaleBox"/></StackPanel>
+                                        <StackPanel Grid.Column="1"><TextBlock Text="曲线" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="CurveBox"/></StackPanel>
+                                    </Grid>
+                                    <CheckBox x:Name="ActionHoldCheck" Content="按住动作状态，松开时释放（键盘/鼠标）" />
+                                    <CheckBox x:Name="ActionDoubleClickCheck" Content="鼠标动作使用双击" />
+                                    <StackPanel Orientation="Horizontal"><Button Content="保存映射" Click="SaveBinding_Click"/><Button Content="取消选择" Style="{StaticResource SecondaryButton}" Click="ClearBindingSelection_Click"/></StackPanel>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="组合按键" Style="{StaticResource SectionTitleStyle}" />
+                                    <DataGrid x:Name="CombosGrid" Height="235" SelectionChanged="CombosGrid_SelectionChanged">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="名称" Binding="{Binding Name}" Width="100"/>
+                                            <DataGridTextColumn Header="按键" Binding="{Binding Buttons}" Width="140"/>
+                                            <DataGridTextColumn Header="动作" Binding="{Binding Action}" Width="*"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                    <TextBlock Text="组合名称" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="ComboNameBox"/><TextBlock Text="组合按键（例如 A+B+LB）" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="ComboButtonsBox"/><Button Content="新增 A+B 组合" Click="AddCombo_Click"/>
+                                    <Button Content="删除组合" Style="{StaticResource SecondaryButton}" Click="DeleteCombo_Click"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <ScrollViewer x:Name="MacrosPanel" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="0.75*"/><ColumnDefinition Width="1.25*"/></Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,14,0">
+                            <StackPanel>
+                                <TextBlock Text="宏列表" Style="{StaticResource SectionTitleStyle}" />
+                                <ListBox x:Name="MacroList" Height="390" SelectionChanged="MacroList_SelectionChanged"/>
+                                <StackPanel Orientation="Horizontal"><Button Content="新建宏" Click="AddMacro_Click"/><Button Content="删除" Style="{StaticResource SecondaryButton}" Click="DeleteMacro_Click"/></StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock x:Name="MacroEditorTitle" Text="宏编辑" Style="{StaticResource SectionTitleStyle}" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" Margin="0,0,8,0"><TextBlock Text="名称" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="MacroNameBox"/></StackPanel>
+                                    <StackPanel Grid.Column="1"><TextBlock Text="重复方式" Style="{StaticResource FieldLabelStyle}"/><ComboBox x:Name="MacroRepeatCombo" DisplayMemberPath="Label"/></StackPanel>
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" Margin="0,0,8,0"><TextBlock Text="重复次数" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="MacroCountBox"/></StackPanel>
+                                    <StackPanel Grid.Column="1"><TextBlock Text="速度倍率" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="MacroSpeedBox"/></StackPanel>
+                                </Grid>
+                                <DataGrid x:Name="MacroStepsGrid" Height="190" SelectionChanged="MacroStepsGrid_SelectionChanged">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="序号" Binding="{Binding Index}" Width="50"/>
+                                        <DataGridTextColumn Header="类型" Binding="{Binding TypeText}" Width="110"/>
+                                        <DataGridTextColumn Header="参数" Binding="{Binding Detail}" Width="*"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <StackPanel Orientation="Horizontal"><Button Content="录制实际输入" Click="RecordMacro_Click"/><Button Content="停止录制" Style="{StaticResource SecondaryButton}" Click="StopRecordMacro_Click"/><Button Content="添加延迟" Style="{StaticResource SecondaryButton}" Click="AddDelayStep_Click"/><Button Content="添加鼠标移动" Style="{StaticResource SecondaryButton}" Click="AddMoveStep_Click"/><Button Content="删除步骤" Style="{StaticResource SecondaryButton}" Click="DeleteMacroStep_Click"/></StackPanel>
+                                <Grid Margin="0,8,0,0"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><StackPanel Grid.Column="0" Margin="0,0,8,0"><TextBlock Text="延迟/鼠标位移参数" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="StepValueBox"/></StackPanel><StackPanel Grid.Column="1" VerticalAlignment="Bottom"><Button Content="保存宏设置" Click="SaveMacro_Click"/></StackPanel></Grid>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </ScrollViewer>
+
+                <ScrollViewer x:Name="ProfilesPanel" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <Border Style="{StaticResource CardStyle}">
+                            <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="0.7*"/><ColumnDefinition Width="1.3*"/></Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,16,0"><TextBlock Text="配置" Style="{StaticResource SectionTitleStyle}" /><ListBox x:Name="ProfileList" Height="190" SelectionChanged="ProfileList_SelectionChanged" DisplayMemberPath="Name"/><StackPanel Orientation="Horizontal"><Button Content="新建" Click="AddProfile_Click"/><Button Content="复制" Style="{StaticResource SecondaryButton}" Click="DuplicateProfile_Click"/><Button Content="删除" Style="{StaticResource SecondaryButton}" Click="DeleteProfile_Click"/></StackPanel></StackPanel>
+                                <StackPanel Grid.Column="1"><TextBlock Text="配置名称" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="ProfileNameBox"/><Button Content="保存名称" Click="SaveProfileName_Click"/><Button Content="设为默认配置" Style="{StaticResource SecondaryButton}" Click="SetDefaultProfile_Click"/><TextBlock Text="删除配置后，引用该配置的自动规则也会被移除。" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,14,0,0"/></StackPanel>
+                            </Grid>
+                        </Border>
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock Text="自动切换规则" Style="{StaticResource SectionTitleStyle}" />
+                                <DataGrid x:Name="RulesGrid" Height="180" SelectionChanged="RulesGrid_SelectionChanged"><DataGrid.Columns><DataGridTextColumn Header="进程名" Binding="{Binding ProcessName}" Width="150"/><DataGridTextColumn Header="窗口标题包含" Binding="{Binding TitleContains}" Width="*"/><DataGridTextColumn Header="配置" Binding="{Binding ProfileName}" Width="180"/><DataGridCheckBoxColumn Header="启用" Binding="{Binding Enabled}" Width="60"/></DataGrid.Columns></DataGrid>
+                                <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><StackPanel Grid.Column="0" Margin="0,0,8,0"><TextBlock Text="进程名（不含 .exe）" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="RuleProcessBox"/></StackPanel><StackPanel Grid.Column="1" Margin="0,0,8,0"><TextBlock Text="窗口标题包含（可选）" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="RuleTitleBox"/></StackPanel><StackPanel Grid.Column="2"><TextBlock Text="使用配置" Style="{StaticResource FieldLabelStyle}"/><ComboBox x:Name="RuleProfileCombo" DisplayMemberPath="Name"/></StackPanel></Grid>
+                                <StackPanel Orientation="Horizontal"><Button Content="添加规则" Click="AddRule_Click"/><Button Content="保存规则" Style="{StaticResource SecondaryButton}" Click="SaveRule_Click"/><Button Content="删除规则" Style="{StaticResource SecondaryButton}" Click="DeleteRule_Click"/></StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <ScrollViewer x:Name="SettingsPanel" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <Border Style="{StaticResource CardStyle}"><StackPanel><TextBlock Text="运行设置" Style="{StaticResource SectionTitleStyle}" /><CheckBox x:Name="TypingWheelEnabledCheck" Content="启用打字轮盘（默认按 L3 开启）"/><Grid><StackPanel><TextBlock Text="打字轮盘开关按键" Style="{StaticResource FieldLabelStyle}"/><ComboBox x:Name="TypingWheelToggleCombo" DisplayMemberPath="Label"/></StackPanel></Grid><CheckBox x:Name="StartupCheck" Content="登录 Windows 后自动启动（默认隐藏到托盘）"/><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><StackPanel Grid.Column="0" Margin="0,0,8,0"><TextBlock Text="双击判定窗口（毫秒）" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="DoublePressBox"/></StackPanel><StackPanel Grid.Column="1"><TextBlock Text="长按判定窗口（毫秒）" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="LongPressBox"/></StackPanel></Grid></StackPanel></Border>
+                        <Border Style="{StaticResource CardStyle}"><StackPanel><TextBlock Text="摇杆参数" Style="{StaticResource SectionTitleStyle}" /><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><StackPanel Grid.Column="0" Margin="0,0,8,0"><TextBlock Text="左摇杆死区" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="LeftDeadZoneBox"/></StackPanel><StackPanel Grid.Column="1" Margin="0,0,8,0"><TextBlock Text="左摇杆灵敏度" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="LeftSensitivityBox"/></StackPanel><StackPanel Grid.Column="2"><TextBlock Text="右摇杆滚动速度" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="RightScrollBox"/></StackPanel></Grid><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><StackPanel Grid.Column="0" Margin="0,0,8,0"><TextBlock Text="左摇杆平滑（越小越跟手）" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="LeftSmoothingBox"/></StackPanel><StackPanel Grid.Column="1"><TextBlock Text="左摇杆曲线（1 为线性）" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="LeftCurveBox"/></StackPanel></Grid><CheckBox x:Name="RightStickInvertCheck" Content="反转右摇杆 Y 方向（默认向上滚动页面上方）"/></StackPanel></Border>
+                        <Border Style="{StaticResource CardStyle}"><StackPanel><TextBlock Text="全局热键（点击文本框后按键录制）" Style="{StaticResource SectionTitleStyle}" /><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><StackPanel Grid.Column="0" Margin="0,0,8,0"><TextBlock Text="启停映射" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="ToggleHotkeyBox" IsReadOnly="True" PreviewKeyDown="HotkeyBox_PreviewKeyDown" GotFocus="Capture_GotFocus" LostFocus="Capture_LostFocus"/><TextBlock Text="紧急停止" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="PanicHotkeyBox" IsReadOnly="True" PreviewKeyDown="HotkeyBox_PreviewKeyDown" GotFocus="Capture_GotFocus" LostFocus="Capture_LostFocus"/></StackPanel><StackPanel Grid.Column="1"><TextBlock Text="打开主窗口" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="ShowHotkeyBox" IsReadOnly="True" PreviewKeyDown="HotkeyBox_PreviewKeyDown" GotFocus="Capture_GotFocus" LostFocus="Capture_LostFocus"/><TextBlock Text="停止宏录制" Style="{StaticResource FieldLabelStyle}"/><TextBox x:Name="RecordHotkeyBox" IsReadOnly="True" PreviewKeyDown="HotkeyBox_PreviewKeyDown" GotFocus="Capture_GotFocus" LostFocus="Capture_LostFocus"/></StackPanel></Grid></StackPanel></Border>
+                        <Border Style="{StaticResource CardStyle}"><StackPanel><TextBlock Text="配置管理" Style="{StaticResource SectionTitleStyle}" /><TextBlock x:Name="ConfigPathText" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,0,0,10"/><StackPanel Orientation="Horizontal"><Button Content="保存全部设置" Click="SaveSettings_Click"/><Button Content="导入配置" Style="{StaticResource SecondaryButton}" Click="ImportConfig_Click"/><Button Content="导出配置" Style="{StaticResource SecondaryButton}" Click="ExportConfig_Click"/><Button Content="打开日志" Style="{StaticResource SecondaryButton}" Click="OpenLogFolder_Click"/></StackPanel></StackPanel></Border>
+                    </StackPanel>
+                </ScrollViewer>
+                                <ScrollViewer x:Name="HelpPanel" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock Text="快速开始" Style="{StaticResource SectionTitleStyle}" />
+                                <TextBlock Text="1. 连接 Xbox/XInput 兼容手柄。" TextWrapping="Wrap" />
+                                <TextBlock Text="2. 在“按键映射”中选择输入、触发方式和动作，然后保存。" TextWrapping="Wrap" />
+                                <TextBlock Text="3. 设置完成后关闭窗口，程序会继续在系统托盘中运行。" TextWrapping="Wrap" />
+                                <TextBlock Text="4. Ctrl+Alt+F12 暂停/启用映射，Ctrl+Alt+End 紧急停止。" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock Text="打字轮盘" Style="{StaticResource SectionTitleStyle}" />
+                                <TextBlock Text="• L3：开启或关闭打字轮盘。" TextWrapping="Wrap" />
+                                <TextBlock Text="• 左摇杆 / 十字键：选择八个方向区块。" TextWrapping="Wrap" />
+                                <TextBlock Text="• 彩色圆点：底部绿色为 A，右侧红色为 B，左侧蓝色为 X，顶部黄色为 Y。" TextWrapping="Wrap" />
+                                <TextBlock Text="• A / B / X / Y：输入当前区块对应位置的字符。" TextWrapping="Wrap" />
+                                <TextBlock Text="• 右摇杆向左 / 向右：切换轮盘层级。" TextWrapping="Wrap" />
+                                <TextBlock Text="• LB：空格，按住可连续输入。" TextWrapping="Wrap" />
+                                <TextBlock Text="• RB：退格，按住可连续删除。" TextWrapping="Wrap" />
+                                <TextBlock Text="• RT：回车 / 确认输入。" TextWrapping="Wrap" />
+                                <TextBlock Text="• LT：按住时作为 Shift，切换大写字母和符号。" TextWrapping="Wrap" />
+                                <TextBlock Text="• 中文输入法开启时，轮盘字母可正常进行拼音组合并显示候选词。" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock Text="全屏与鼠标" Style="{StaticResource SectionTitleStyle}" />
+                                <TextBlock Text="• 全屏模式下普通映射继续工作，不再自动暂停。" TextWrapping="Wrap" />
+                                <TextBlock Text="• 全屏时 B 键会额外发送 Esc，用于退出视频全屏；打字轮盘开启时仍输入字符。" TextWrapping="Wrap" />
+                                <TextBlock Text="• 使用手柄鼠标点击窗口关闭按钮不会停止映射。" TextWrapping="Wrap" />
+                                <TextBlock Text="• 左摇杆曲线 1.0 为线性；数值越大中心越精细，数值越小中心越灵敏。" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/GamepadPilot.App/GamepadPilot.App.csproj" />
+    <Project Path="src/GamepadPilot.Core/GamepadPilot.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/GamepadPilot.SelfTest/GamepadPilot.SelfTest.csproj" />
+  </Folder>
+</Solution>
